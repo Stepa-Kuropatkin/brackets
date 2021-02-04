@@ -1,28 +1,22 @@
 module.exports = function check(str, bracketsConfig) {
-    let openBr = [];
-    let closedBr = [];
-
-    for (let i = 0; i < bracketsConfig.length; i++) {
-        openBr[i] = bracketsConfig[i][0];
-        closedBr[i] = bracketsConfig[i][1];
-    }
-
-    let arr = str.split("");
-
-    for (let i = 0; i < arr.length; i++) {
-        for (let br in openBr) {
-            if (arr[i] == openBr[br]) {
-                if (arr[i + 1] == closedBr[br]) {
-                    arr.splice(i, 2);
-                    i = -1;
-                    break;
+    const hist = [];
+    for (let i = 0; i < str.length; i++) {
+        for (let j = 0; j < bracketsConfig.length; j++) {
+            if (str[i] === bracketsConfig[j][0]) {
+                if (bracketsConfig[j][0] === bracketsConfig[j][1]) {
+                    if (hist[hist.length - 1] === str[i]) {
+                        hist.pop();
+                        break;
+                    }
                 }
+                hist.push(str[i]);
+                break;
+            }
+            if (str[i] === bracketsConfig[j][1]) {
+                if (hist.pop() !== bracketsConfig[j][0]) return false;
+                break;
             }
         }
     }
-    if (arr.length == 0) {
-        return true;
-    } else {
-        return false;
-    }
+    return hist.length === 0;
 };
